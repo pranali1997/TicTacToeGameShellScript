@@ -21,10 +21,10 @@ function toss()
 	if [ $letter -eq 1 ]
 	then
 		player="X"
-		echo "Letter X"
+		echo "Player will play first"
 	else
 		player="O"
-		echo "Letter O"
+		echo "computer will play first"
 	fi
 }
 toss
