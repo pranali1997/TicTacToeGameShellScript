@@ -2,6 +2,10 @@
 
 echo "WELCOME TO TIC TAC TOE GAME"
 
+#varaibles
+player=0
+computer=0
+
 function resetBoard()
 {
 	for (( i=1; i<=9; i++ ))
@@ -11,14 +15,16 @@ function resetBoard()
 }
 resetBoard
 
-function assignedLetter()
+function toss()
 {
 	letter=$((RANDOM%2))
 	if [ $letter -eq 1 ]
 	then
+		player="X"
 		echo "Letter X"
 	else
+		player="O"
 		echo "Letter O"
 	fi
 }
-assignedLetter
+toss
