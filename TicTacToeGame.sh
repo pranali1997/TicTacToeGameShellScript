@@ -119,7 +119,7 @@ function checkDiagonals()
 
 }
 
-function checkResult()
+function checkWinner()
 {
 	i=0
 		win1=$(checkRow)
@@ -169,4 +169,4 @@ function displayWinner()
 	done
 
 }
-main
+displayWinner
