@@ -5,6 +5,7 @@ echo "WELCOME TO TIC TAC TOE GAME"
 #varaibles
 player=0
 computer=0
+flag=0
 
 declare -a board
 
@@ -29,7 +30,7 @@ function toss()
 		echo "computer will play first"
 	fi
 }
-#toss
+toss
 
 function displayBoard()
 {
@@ -43,10 +44,9 @@ function displayBoard()
 
 }
 
+
 function checkForValidation()
 {
-#	displayBoard
-	local flag=0
 	read -p "enter a number between 1 to 9 " position
 	for (( i=1;i<=9;i++ ))
 	do
@@ -58,100 +58,115 @@ function checkForValidation()
 			flag=0
 		fi
 	done
-
 	if [ $flag -eq 1 ]
 	then
 	 	board[$i]=X
 		displayBoard  ${board[$i]}
-	else
-		checkForValidation
 	fi
+
 }
 
 function checkRow()
 {
-	local flag=0
-	checkForValidation
+	local flag1=0
 	for((i=1;i<=9;))
 	do
-		if [[ board[$i] -eq board[$(($i+1))] && board[$(($i+1))] -eq board[$(($i+2))] ]]
+		if [[ ${board[$i]} -eq ${board[$(($i+1))]} && ${board[$(($i+1))]} -eq ${board[$(($i+2))]} ]]
 		then
-			flag=0
+			flag1=0
 			break
 		else
-			flag=1
+			flag1=1
 		fi
 		i=$(($i+3))
 
 	done
-
-	if [ $flag -eq 0 ]
-	then
-		echo 0
-	else
-		checkRow
-	fi
+	echo $flag1
 }
 
 function checkColumn()
 {
-	local flag=0
-	checkForValidation
+	local flag2=0
 	for((j=1;j<=3;j++))
 	do
-		if [[ board[$j] -eq board[$(($j+3))] && board[$(($j+6))] -eq board[$j] ]]
+		if [[ ${board[$j]} -eq ${board[$(($j+3))]} && ${board[$(($j+6))]} -eq ${board[$j]} ]]
 		then
-			flag=0
+			flag2=0
 			break
 		else
-			flag=1
+			flag2=1
 		fi
 
 	done
+			echo $flag2
 
-	if [ $flag -eq 0 ]
-	then
-		echo 0
-	else
-		checkColumn
-	fi
 }
 
 function checkDiagonals()
 {
-	local flag=0
-	checkForValidation
-	for((j=1;j<=3;j++))
-	do
-		if [[ board[$j] -eq board[$(($j+4))] && board[$(($j+4))] -eq board[$(($j+8))] ]] ||  [[ board[$j] -eq board[$(($j+2))] && board[$(($j+2))] -eq board[$(($j+4))] ]]
+	flag3=1
+		if [[ ${board[1]} -eq ${board[5]} && ${board[1]} -eq ${board[9]} ]]
 		then
-			flag=0
-			break
+			flag3=0
+		elif [[ ${board[3]} -eq ${board[5]} ]] && [[ ${board[3]} -eq ${board[7]} ]]
+		then
+			flag3=0
 		else
-			flag=1
+			flag3=1
+
 		fi
+			echo $flag3
 
-	done
-
-	if [ $flag -eq 0 ]
-	then
-		echo 0
-	else
-		checkDiagonals
-	fi
 }
 
 function checkResult()
 {
-win1=$(checkRow)
-win2=$(checkColumn)
-win3=$(checkDiagonals)
+	i=0
+		win1=$(checkRow)
+		win2=$(checkColumn)
+		win3=$(checkDiagonals)
 
-if [ $win1 -eq 0 && $win2 -eq 0 && $win3 -eq 0 ]
-then
-		echo "X wins"
-else
-		echo "wrong"
-fi
+		if [ $win1 -eq 0 ] || [ $win2 -eq 0 ] || [ $win3 -eq 0 ]
+		then
+			echo "x wins"
+		else
+			checkForValidation
+		fi
+		i=$(($i+1))
 }
-checkResult
+
+
+function displayWinner()
+{
+	i=0
+	while [ $i -lt 9 ]
+	do
+		displayBoard
+		checkForValidation
+		flag1=$(checkRow)
+
+		if [ $flag1 -eq 0 ]
+		then
+			exit
+		fi
+
+		flag2=$(checkColumn)
+
+		if [ $flag2 -eq 0 ]
+		then
+			exit
+		fi
+
+		flag3=$(checkDiagonals)
+		if [ $flag3 -eq 0 ]
+		then
+			exit
+		fi
+
+		checkResult
+
+		((i++))
+	done
+
+}
+main
