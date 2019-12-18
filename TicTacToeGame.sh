@@ -103,11 +103,11 @@ function checkRow()
 		then
 			flag1=0
 			break
-		else
+	else
 			flag1=1
-		fi
-		i=$(($i+3))
+	fi
 
+		i=$(($i+3))
 	done
 	echo $flag1
 }
@@ -147,6 +147,66 @@ function checkDiagonals()
 
 }
 
+function checkOpponentRow()
+{
+	for((i=1;i<=9;))
+	do
+		if [[ ${board[$i]} -eq ${board[$(($i+1))]} && ${board[$i]}==$willPlay1 ]] 
+		then
+			board[$(($i+2))]=$willPlay2
+		elif [[ ${board[$i]} -eq ${board[$(($i+2))]} && ${board[$i]}==$willPlay1 ]]
+		then
+			board[$(($i+1))]=$willPlay2
+		elif [[ ${board[$(($i+1))]} -eq ${board[$(($i+2))]} && ${board[$(($i+1))]}==$willPlay1 ]]
+		then
+			board[$i]=$willPlay2
+		fi
+
+		i=$(($i+3))
+	done
+
+
+}
+
+function checkOpponentColumn()
+{
+	for((i=1;i<=3;i++))
+	do
+		if [[ ${board[$i]} -eq ${board[$(($i+3))]} && ${board[$i]}==$willPlay1 ]] 
+		then
+			board[$(($i+6))]=$willPlay2
+		elif [[ ${board[$i]} -eq ${board[$(($i+6))]} && ${board[$i]}==$willPlay1 ]]
+		then
+			board[$(($i+3))]=$willPlay2
+		elif [[ ${board[$(($i+3))]} -eq ${board[$(($i+6))]} && ${board[$(($i+1))]}==$willPlay1 ]]
+		then
+			board[$i]=$willPlay2
+		fi
+	done
+
+
+}
+
+function checkOpponentDiagonals()
+{
+		if [[ ${board[1]} -eq ${board[5]} && ${board[1]}==$willPlay1 ]]
+		then
+			board[9]=$willPlay2
+		elif [[ ${board[9]} -eq ${board[5]} && ${board[5]}==$willPlay1 ]]
+		then
+			board[1]=$willPlay2
+		elif [[ ${board[5]} -eq ${board[7]} && ${board[5]}==$willPlay1 ]]
+		then
+			board[3]=$willPlay2
+		elif [[ ${board[3]} -eq ${board[7]} && ${board[3]}==$willPlay1 ]]
+		then
+			board[5]=$willPlay2
+		fi
+			echo $flag3
+
+}
+
+
 function checkWinner()
 {
 		win1=$(checkRow)
@@ -159,18 +219,19 @@ function checkWinner()
 		else
 			checkForValidation
 		fi
-#		i=$(($i+1))
 }
 
 
 function displayWinner()
 {
-
 	i=0
 	while [ $i -le 9 ]
 	do
-		displayBoard
+		checkOpponentRow
+		checkOpponentColumn
+ 		checkOpponentDiagonals
 		checkForValidation
+		displayBoard
 		flag1=$(checkRow)
 
 		if [ $flag1 -eq 0 ]
