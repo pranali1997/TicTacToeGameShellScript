@@ -2,10 +2,12 @@
 
 echo "WELCOME TO TIC TAC TOE GAME"
 
-#varaibles
+#variables
 player=0
 computer=0
 flag=0
+willPlay1=""
+willPlay2=""
 
 declare -a board
 
@@ -20,17 +22,26 @@ resetBoard
 
 function toss()
 {
+
 	letter=$((RANDOM%2))
 	if [ $letter -eq 1 ]
 	then
 		player="X"
-		echo "Player will play first"
+		computer="O"
 	else
 		player="O"
-		echo "computer will play first"
+		computer="X"
 	fi
+	echo $player
 }
-toss
+
+willPlay1=$(toss)
+	if [ $willPlay1 == "X" ]
+	then
+		willPlay2="O"
+	else
+		willPlay2="X"
+	fi
 
 function displayBoard()
 {
@@ -48,30 +59,47 @@ function displayBoard()
 function checkForValidation()
 {
 	read -p "enter a number between 1 to 9 " position
-	for (( i=1;i<=9;i++ ))
-	do
-		if [ $position -eq $i ]
-		then
-			flag=1
-			break
-		else
-			flag=0
-		fi
-	done
-	if [ $flag -eq 1 ]
-	then
-	 	board[$i]=X
-		displayBoard  ${board[$i]}
-	fi
 
+		for (( i=1;i<=9;i++ ))
+		do
+			if [[ $position -eq $i && $position != "X" && $position != "O" ]]
+			then
+				board[$i]=$willPlay1
+				displayBoard  ${board[$i]}
+			break
+				checkForValidation
+				flag=0
+			fi
+		done
+
+		for (( i=1;i<=9;i++ ))
+		do
+			computerPos=$((RANDOM%9+1))
+			if [[ $computerPos -eq $i && $computerPos != "X" && $computerPos != "O" ]]
+			then
+				board[$i]=$willPlay2
+				displayBoard  ${board[$i]}
+			break
+				checkForValidation
+				flag=0
+			fi
+		done
+	if [[ $flag -ne 0 && $position == "X" && $computerPos == "O" && $computerPos == "X" && $position == "O" ]]
+	then
+		echo "again"
+		displayWinner
+	else
+		echo "value"
+	fi
 }
+
 
 function checkRow()
 {
 	local flag1=0
 	for((i=1;i<=9;))
 	do
-		if [[ ${board[$i]} -eq ${board[$(($i+1))]} && ${board[$(($i+1))]} -eq ${board[$(($i+2))]} ]]
+	if [[ ${board[$i]} -eq ${board[$(($i+1))]} && ${board[$(($i+1))]} -eq ${board[$(($i+2))]} ]] && [[ ${board[$i]} != "X" || ${board[$i]} != "O" ]]
 		then
 			flag1=0
 			break
@@ -89,7 +117,7 @@ function checkColumn()
 	local flag2=0
 	for((j=1;j<=3;j++))
 	do
-		if [[ ${board[$j]} -eq ${board[$(($j+3))]} && ${board[$(($j+6))]} -eq ${board[$j]} ]]
+		if [[ ${board[$j]} -eq ${board[$(($j+3))]} && ${board[$(($j+6))]} -eq ${board[$j]} ]] && [[ ${board[$j]} != "X" || ${board[$]} != "O" ]]
 		then
 			flag2=0
 			break
@@ -105,10 +133,10 @@ function checkColumn()
 function checkDiagonals()
 {
 	flag3=1
-		if [[ ${board[1]} -eq ${board[5]} && ${board[1]} -eq ${board[9]} ]]
+		if [[ ${board[1]} -eq ${board[5]} && ${board[1]} -eq ${board[9]} ]] && [[ ${board[1]} != "X" || ${board[1]} != "O" ]]
 		then
 			flag3=0
-		elif [[ ${board[3]} -eq ${board[5]} ]] && [[ ${board[3]} -eq ${board[7]} ]]
+		elif [[ ${board[3]} -eq ${board[5]} ]] && [[ ${board[3]} -eq ${board[7]} ]] && [[ ${board[3]} != "X" || ${board[3]} != "O" ]]
 		then
 			flag3=0
 		else
@@ -121,7 +149,6 @@ function checkDiagonals()
 
 function checkWinner()
 {
-	i=0
 		win1=$(checkRow)
 		win2=$(checkColumn)
 		win3=$(checkDiagonals)
@@ -132,17 +159,18 @@ function checkWinner()
 		else
 			checkForValidation
 		fi
-		i=$(($i+1))
+#		i=$(($i+1))
 }
 
 
 function displayWinner()
 {
+
 	i=0
-	while [ $i -lt 9 ]
+	while [ $i -le 9 ]
 	do
 		displayBoard
-		checkForValidation
+		checkForValidation $willPlay1 $willPlay2
 		flag1=$(checkRow)
 
 		if [ $flag1 -eq 0 ]
@@ -163,10 +191,11 @@ function displayWinner()
 			exit
 		fi
 
-		checkResult
-
+		checkWinner
+		displayBoard
 		((i++))
 	done
 
 }
 displayWinner
+
