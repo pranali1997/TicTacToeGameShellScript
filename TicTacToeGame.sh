@@ -170,7 +170,7 @@ function displayWinner()
 	while [ $i -le 9 ]
 	do
 		displayBoard
-		checkForValidation $willPlay1 $willPlay2
+		checkForValidation
 		flag1=$(checkRow)
 
 		if [ $flag1 -eq 0 ]
