@@ -56,7 +56,7 @@ function displayBoard()
 }
 
 
-function takeCorners()
+function checkCorners()
 {
 	cornerCompValue=$(((RANDOM%4)+1))
 	if [ $cornerCompValue -eq 1 ]
@@ -75,7 +75,7 @@ function takeCorners()
 	echo $blockValue
 }
 
-function takeCentre()
+function checkCentre()
 {
 	blockValue=5
 	echo $blockValue
@@ -117,7 +117,7 @@ function checkForValidation()
 	done
 	for (( i=1;i<=9;i++ ))
 	do
-			i=$(takeCorners)
+			i=$(checkCorners)
 			if [[ ${board[$i]}!=$willPlay1 && ${board[$i]}!=$willPlay2 ]]
 			then
 				board[$i]=$willPlay2
@@ -125,7 +125,7 @@ function checkForValidation()
 				flag=0
 				break
 			fi
-			i=$(takeCentre)
+			i=$(checkCentre)
 			if [[ ${board[$i]}!=$willPlay1 && ${board[$i]}!=$willPlay2 ]]
 			then
 				board[$i]=$willPlay2
