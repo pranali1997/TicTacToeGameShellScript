@@ -8,6 +8,7 @@ computer=0
 flag=1
 willPlay1=""
 willPlay2=""
+blockOpponent=0
 
 declare -a board
 
@@ -55,20 +56,19 @@ function displayBoard()
 
 }
 
-
 function checkCorners()
 {
 	cornerCompValue=$(((RANDOM%4)+1))
 	if [ $cornerCompValue -eq 1 ]
 	then
 		blockValue=1
+	elif [ $cornerCompValue -eq 2 ]
+	then
+		blockValue=3
 	elif [ $cornerCompValue -eq 3 ]
 	then
-		bloackValue=3
-	elif [ $cornerCompValue -eq 7 ]
-	then
 		blockValue=7
-	elif [ $cornerCompValue -eq 9 ]
+	elif [ $cornerCompValue -eq 4 ]
 	then
 		blockValue=9
 	fi
@@ -84,20 +84,20 @@ function checkCentre()
 function checkSides()
 {
 	cornerCompValue=$((RANDOM%4))
-	if [ $cornerCompValue -eq 2 ]
+	if [ $cornerCompValue -eq 1 ]
 	then
-		cornerValue=1
+		bloackValue=1
+	elif [ $cornerCompValue -eq 2 ]
+	then
+		blockValue=3
+	elif [ $cornerCompValue -eq 3 ]
+	then
+		blockValue=7
 	elif [ $cornerCompValue -eq 4 ]
 	then
-		cornerValue=3
-	elif [ $cornerCompValue -eq 6 ]
-	then
-		cornerValue=7
-	elif [ $cornerCompValue -eq 8 ]
-	then
-		cornerValue=9
+		blockValue=9
 	fi
-	echo $cornerValue
+	echo $blockValue
 }
 
 
@@ -118,7 +118,7 @@ function checkForValidation()
 	for (( i=1;i<=9;i++ ))
 	do
 			i=$(checkCorners)
-			if [[ ${board[$i]}!=$willPlay1 && ${board[$i]}!=$willPlay2 ]]
+			if [[ ${board[$i]} != $willPlay1 && ${board[$i]} != $willPlay2 ]]
 			then
 				board[$i]=$willPlay2
 				displayBoard ${board[$i]}
@@ -126,7 +126,7 @@ function checkForValidation()
 				break
 			fi
 			i=$(checkCentre)
-			if [[ ${board[$i]}!=$willPlay1 && ${board[$i]}!=$willPlay2 ]]
+			if [[ ${board[$i]} -eq $i && ${board[$i]} != $willPlay1 && ${board[$i]} != $willPlay2 ]]
 			then
 				board[$i]=$willPlay2
 				displayBoard ${board[$i]}
@@ -134,7 +134,7 @@ function checkForValidation()
 				break
 			fi
 			i=$(checkSides)
-			if [[ ${board[$i]} -eq $i && ${board[$computerPos]}!=$willPlay1 && ${board[$computerPos]}!=$willPlay2 ]]
+			if [[ ${board[$i]} -eq $i && ${board[$i]} != $willPlay1 && ${board[$i]} != $willPlay2 ]]
 			then
 				board[$i]=$willPlay2
 				displayBoard  ${board[$i]}
@@ -143,7 +143,7 @@ function checkForValidation()
 			fi
 	done
 
-	if [[ $flag -ne 0 && ${board[$position]}==$willPlay1 && ${board[$computerPos]}==$willPlay2 && ${board[$computerPos]}==$willPlay1 && ${board[$position]}==$willPlay2 ]]
+	if [[ $flag -ne 0 && ${board[$position]}==$willPlay1 && ${board[$i]}==$willPlay2 && ${board[$i]}==$willPlay1 && ${board[$position]}==$willPlay2 ]]
 	then
 		echo "again"
 		displayWinner
@@ -158,7 +158,7 @@ function checkRow()
 	flag1=0
 	for (( i=1;i<=9; ))
 	do
-		if [[ ${board[$i]} -eq ${board[(($i+1))]} && ${board[(($i+1))]} -eq ${board[(($i+2))]} ]] && [[ ${board[$i]} != $willPlay2 || ${board[$i]}!=$willPlay1 ]]
+		if [[ ${board[$i]} -eq ${board[(($i+1))]} && ${board[(($i+1))]} -eq ${board[(($i+2))]} ]] && [[ ${board[$i]} != $willPlay1 || ${board[$i]}!=$willPlay2 ]]
 		then
 			flag1=0
 			break
@@ -167,7 +167,6 @@ function checkRow()
 		fi
 		i=$(($i+3))
 	done
-
 	echo $flag1
 }
 
@@ -176,7 +175,7 @@ function checkColumn()
 	flag2=0
 	for((j=1;j<=3;j++))
 	do
-		if [[ ${board[$j]} -eq ${board[$(($j+3))]} && ${board[$(($j+6))]} -eq ${board[$j]} ]] && [[ ${board[$j]}!=$willPlay1 || ${board[$j]}!=$willPlay2 ]]
+		if [[ ${board[$j]} -eq ${board[$(($j+3))]} && ${board[$(($j+6))]} -eq ${board[$j]} ]] && [[ ${board[$i]}=$willPlay1 || ${board[$j]}!=$willPlay2 ]]
 		then
 			flag2=0
 			break
@@ -192,20 +191,20 @@ function checkColumn()
 function checkDiagonals()
 {
 	flag3=1
-	if [[ ${board[1]} -eq ${board[5]} && ${board[1]} -eq ${board[9]} ]] && [[ ${board[1]}=="X" ]]
+	if [[ ${board[1]} -eq ${board[5]} && ${board[1]} -eq ${board[9]} ]] && [[ ${board[1]} == $willPlay1 ]]
 	then
 		flag3=0
-	elif [[ ${board[3]} -eq ${board[5]} ]] && [[ ${board[3]} -eq ${board[7]} ]] && [[ ${board[3]}=="O" ]]
+	elif [[ ${board[3]} -eq ${board[5]} ]] && [[ ${board[3]} -eq ${board[7]} ]] && [[ ${board[3]} == $willPlay1 ]]
 	then
 		flag3=0
 	else
 		flag3=1
 
 	fi
-	if [[ ${board[1]} -eq ${board[5]} && ${board[1]} -eq ${board[9]} ]] && [[ ${board[1]}=="X" ]]
+	if [[ ${board[1]} -eq ${board[5]} && ${board[1]} -eq ${board[9]} ]] && [[ ${board[1]} == $willPlay2 ]]
 	then
 		flag3=0
-	elif [[ ${board[3]} -eq ${board[5]} ]] && [[ ${board[3]} -eq ${board[7]} ]] && [[ ${board[3]}=="O" ]]
+	elif [[ ${board[3]} -eq ${board[5]} ]] && [[ ${board[3]} -eq ${board[7]} ]] && [[ ${board[3]} == $willPlay2 ]]
 	then
 		flag3=0
 	else
@@ -218,6 +217,8 @@ function checkDiagonals()
 
 function checkOpponentRow()
 {
+if [ $blockOpponent -eq 0 ]
+then
 	for((i=1;i<=9;))
 	do
 		if [[ ${board[$i]} -eq ${board[$(($i+1))]} && ${board[$i]}==$willPlay1 ]]
@@ -233,12 +234,14 @@ function checkOpponentRow()
 
 		i=$(($i+3))
 	done
-
+fi
 
 }
 
 function checkOpponentColumn()
 {
+if [ $blockOpponent -eq 0 ]
+then
 	for((i=1;i<=3;i++))
 	do
 		if [[ ${board[$i]} -eq ${board[$(($i+3))]} && ${board[$i]}==$willPlay1 ]] 
@@ -252,12 +255,14 @@ function checkOpponentColumn()
 			board[$i]=$willPlay2
 		fi
 	done
-
+fi
 
 }
 
 function checkOpponentDiagonals()
 {
+if [ $blockOpponent -eq 0 ]
+then
 		if [[ ${board[1]} -eq ${board[5]} && ${board[1]}==$willPlay1 ]]
 		then
 			board[9]=$willPlay2
@@ -272,7 +277,7 @@ function checkOpponentDiagonals()
 			board[5]=$willPlay2
 		fi
 			echo $flag3
-
+fi
 }
 
 function displayWinner()
@@ -306,7 +311,13 @@ function displayWinner()
 			exit
 		fi
 		((i++))
+		if [ $i -ge 9 ]
+		then
+			echo "It's a tie..."
+		fi
 	done
+
+
 
 }
 displayWinner
