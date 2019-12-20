@@ -81,6 +81,26 @@ function takeCentre()
 	echo $blockValue
 }
 
+function checkSides()
+{
+	cornerCompValue=$((RANDOM%4))
+	if [ $cornerCompValue -eq 2 ]
+	then
+		cornerValue=1
+	elif [ $cornerCompValue -eq 4 ]
+	then
+		cornerValue=3
+	elif [ $cornerCompValue -eq 6 ]
+	then
+		cornerValue=7
+	elif [ $cornerCompValue -eq 8 ]
+	then
+		cornerValue=9
+	fi
+	echo $cornerValue
+}
+
+
 function checkForValidation()
 {
 	read -p "enter a number between 1 to 9 " position
@@ -97,7 +117,6 @@ function checkForValidation()
 	done
 	for (( i=1;i<=9;i++ ))
 	do
-			computerPos=$((RANDOM%9+1))
 			i=$(takeCorners)
 			if [[ ${board[$i]}!=$willPlay1 && ${board[$i]}!=$willPlay2 ]]
 			then
@@ -106,7 +125,7 @@ function checkForValidation()
 				flag=0
 				break
 			fi
-			i=$(takeCentre)	
+			i=$(takeCentre)
 			if [[ ${board[$i]}!=$willPlay1 && ${board[$i]}!=$willPlay2 ]]
 			then
 				board[$i]=$willPlay2
@@ -114,7 +133,8 @@ function checkForValidation()
 				flag=0
 				break
 			fi
-			if [[ $computerPos -eq $i && ${board[$computerPos]}!=$willPlay1 && ${board[$computerPos]}!=$willPlay2 ]]
+			i=$(checkSides)
+			if [[ ${board[$i]} -eq $i && ${board[$computerPos]}!=$willPlay1 && ${board[$computerPos]}!=$willPlay2 ]]
 			then
 				board[$i]=$willPlay2
 				displayBoard  ${board[$i]}
