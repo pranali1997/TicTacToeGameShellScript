@@ -61,18 +61,24 @@ function takeCorners()
 	cornerCompValue=$((RANDOM%4))
 	if [ $cornerCompValue -eq 1 ]
 	then
-		cornerValue=1
+		blockValue=1
 	elif [ $cornerCompValue -eq 3 ]
 	then
-		cornerValue=3
+		bloackValue=3
 	elif [ $cornerCompValue -eq 7 ]
 	then
-		cornerValue=7
+		blockValue=7
 	elif [ $cornerCompValue -eq 9 ]
 	then
-		cornerValue=9
+		blockValue=9
 	fi
-	echo $cornerValue
+	echo $blockValue
+}
+
+function takeCentre()
+{
+	blockValue=5
+	echo $blockValue
 }
 
 function checkForValidation()
@@ -92,15 +98,30 @@ function checkForValidation()
 		done
 		for (( i=1;i<=9;i++ ))
 		do
-			i=$(takeCorners)
-			board[$i]=$willPlay2
 			computerPos=$((RANDOM%9+1))
+				i=$(takeCorners)
+				if [[ $i!=$willPlay1 && $i!=$willPlay2 ]]
+				then
+					board[$i]=$willPlay1
+					displayBoard ${board[$i]}
+					flag=0
+					break
+				fi
+				i=$(takeCentre)
+				if [[ $i!=$willPlay1 && $i!=$willPlay2 ]]
+				then
+					board[$i]=$willPlay1
+					displayBoard ${board[$i]}
+					flag=0
+					break
+				fi
 			if [[ $computerPos -eq $i && $computerPos!=$willPlay1 && $computerPos!=$willPlay2 ]]
 			then
 				board[$i]=$willPlay2
 				displayBoard  ${board[$i]}
 				flag=0
 				break
+			else
 				checkForValidation
 			fi
 		done
