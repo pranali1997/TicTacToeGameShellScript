@@ -223,20 +223,6 @@ function checkDiagonals()
 
 }
 
-function checkWinner()
-{
-		win1=$(checkRow)
-		win2=$(checkColumn)
-		win3=$(checkDiagonals)
-
-		if [ $win1 -eq 0 ] || [ $win2 -eq 0 ] || [ $win3 -eq 0 ]
-		then
-			echo "x wins"
-		else
-			checkForValidation
-		fi
-}
-
 function checkOpponentRow()
 {
 	for((i=1;i<=9;))
@@ -325,7 +311,6 @@ function displayWinner()
 		then
 			exit
 		fi
-		checkWinner
 		displayBoard
 		((i++))
 	done
