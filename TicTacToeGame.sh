@@ -101,7 +101,7 @@ function checkSides()
 }
 
 
-function checkForValidation()
+function userAndComputerPlay()
 {
 	read -p "enter a number between 1 to 9 " position
 	for (( i=1;i<=9;i++ ))
@@ -234,6 +234,7 @@ then
 
 		i=$(($i+3))
 	done
+	blockOpponent=1
 fi
 
 }
@@ -255,14 +256,15 @@ then
 			board[$i]=$willPlay2
 		fi
 	done
+	blockOpponent=1
 fi
 
 }
 
 function checkOpponentDiagonals()
 {
-if [ $blockOpponent -eq 0 ]
-then
+	if [ $blockOpponent -eq 0 ]
+	then
 		if [[ ${board[1]} -eq ${board[5]} && ${board[1]}==$willPlay1 ]]
 		then
 			board[9]=$willPlay2
@@ -276,8 +278,9 @@ then
 		then
 			board[5]=$willPlay2
 		fi
-			echo $flag3
-fi
+		blockOpponent=1
+	fi
+		echo $flag3
 }
 
 function displayWinner()
@@ -289,7 +292,7 @@ function displayWinner()
 		checkOpponentRow
 		checkOpponentColumn
  		checkOpponentDiagonals
-		checkForValidation
+		userAndComputerPlay
 		displayBoard
 		flag1=$(checkRow)
 
