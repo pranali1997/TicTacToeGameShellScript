@@ -6,8 +6,8 @@ echo "WELCOME TO TIC TAC TOE GAME"
 player=0
 computer=0
 flag=1
-willPlay1=""
-willPlay2=""
+playerSymbol1=""
+playerSymbol2=""
 blockOpponent=0
 
 declare -a board
@@ -36,12 +36,12 @@ function toss()
 	echo $player
 }
 
-willPlay1=$(toss)
-if [ $willPlay1 == "X" ]
+playerSymbol1=$(toss)
+if [ $playerSymbol1 == "X" ]
 then
-	willPlay2="O"
+	playerSymbol2="O"
 else
-	willPlay2="X"
+	playerSymbol2="X"
 fi
 
 function displayBoard()
@@ -107,9 +107,9 @@ function userAndComputerPlay()
 	for (( i=1;i<=9;i++ ))
 	do
 
-		if [[ $position -eq $i && ${board[$position]}!=$willPlay1 && ${board[$position]}!=$willPlay2 ]]
+		if [[ $position -eq $i && ${board[$position]}!=$playerSymbol1 && ${board[$position]}!=$playerSymbol2 ]]
 		then
-			board[$i]=$willPlay1
+			board[$i]=$playerSymbol1
 			displayBoard  ${board[$i]}
 			flag=0
 			break
@@ -118,32 +118,32 @@ function userAndComputerPlay()
 	for (( i=1;i<=9;i++ ))
 	do
 			i=$(checkCorners)
-			if [[ ${board[$i]} != $willPlay1 && ${board[$i]} != $willPlay2 ]]
+			if [[ ${board[$i]} != $playerSymbol1 && ${board[$i]} != $playerSymbol2 ]]
 			then
-				board[$i]=$willPlay2
+				board[$i]=$playerSymbol2
 				displayBoard ${board[$i]}
 				flag=0
 				break
 			fi
 			i=$(checkCentre)
-			if [[ ${board[$i]} -eq $i && ${board[$i]} != $willPlay1 && ${board[$i]} != $willPlay2 ]]
+			if [[ ${board[$i]} -eq $i && ${board[$i]} != $playerSymbol1 && ${board[$i]} != $playerSymbol2 ]]
 			then
-				board[$i]=$willPlay2
+				board[$i]=$playerSymbol2
 				displayBoard ${board[$i]}
 				flag=0
 				break
 			fi
 			i=$(checkSides)
-			if [[ ${board[$i]} -eq $i && ${board[$i]} != $willPlay1 && ${board[$i]} != $willPlay2 ]]
+			if [[ ${board[$i]} -eq $i && ${board[$i]} != $playerSymbol1 && ${board[$i]} != $playerSymbol2 ]]
 			then
-				board[$i]=$willPlay2
+				board[$i]=$playerSymbol2
 				displayBoard  ${board[$i]}
 				flag=0
 				break
 			fi
 	done
 
-	if [[ $flag -ne 0 && ${board[$position]}==$willPlay1 && ${board[$i]}==$willPlay2 && ${board[$i]}==$willPlay1 && ${board[$position]}==$willPlay2 ]]
+	if [[ $flag -ne 0 && ${board[$position]}==$playerSymbol1 && ${board[$i]}==$playerSymbol2 && ${board[$i]}==$playerSymbol1 && ${board[$position]}==$playerSymbol2 ]]
 	then
 		echo "again"
 		displayWinner
@@ -158,7 +158,7 @@ function checkRow()
 	flag1=0
 	for (( i=1;i<=9; ))
 	do
-		if [[ ${board[$i]} -eq ${board[(($i+1))]} && ${board[(($i+1))]} -eq ${board[(($i+2))]} ]] && [[ ${board[$i]} != $willPlay1 || ${board[$i]}!=$willPlay2 ]]
+		if [[ ${board[$i]} -eq ${board[(($i+1))]} && ${board[(($i+1))]} -eq ${board[(($i+2))]} ]] && [[ ${board[$i]} != $playerSymbol1 || ${board[$i]}!=$playerSymbol2 ]]
 		then
 			flag1=0
 			break
@@ -175,7 +175,7 @@ function checkColumn()
 	flag2=0
 	for((j=1;j<=3;j++))
 	do
-		if [[ ${board[$j]} -eq ${board[$(($j+3))]} && ${board[$(($j+6))]} -eq ${board[$j]} ]] && [[ ${board[$i]}=$willPlay1 || ${board[$j]}!=$willPlay2 ]]
+		if [[ ${board[$j]} -eq ${board[$(($j+3))]} && ${board[$(($j+6))]} -eq ${board[$j]} ]] && [[ ${board[$i]}=$playerSymbol1 || ${board[$j]}!=$playerSymbol2 ]]
 		then
 			flag2=0
 			break
@@ -191,20 +191,20 @@ function checkColumn()
 function checkDiagonals()
 {
 	flag3=1
-	if [[ ${board[1]} -eq ${board[5]} && ${board[1]} -eq ${board[9]} ]] && [[ ${board[1]} == $willPlay1 ]]
+	if [[ ${board[1]} -eq ${board[5]} && ${board[1]} -eq ${board[9]} ]] && [[ ${board[1]} == $playerSymbol1 ]]
 	then
 		flag3=0
-	elif [[ ${board[3]} -eq ${board[5]} ]] && [[ ${board[3]} -eq ${board[7]} ]] && [[ ${board[3]} == $willPlay1 ]]
+	elif [[ ${board[3]} -eq ${board[5]} ]] && [[ ${board[3]} -eq ${board[7]} ]] && [[ ${board[3]} == $playerSymbol1 ]]
 	then
 		flag3=0
 	else
 		flag3=1
 
 	fi
-	if [[ ${board[1]} -eq ${board[5]} && ${board[1]} -eq ${board[9]} ]] && [[ ${board[1]} == $willPlay2 ]]
+	if [[ ${board[1]} -eq ${board[5]} && ${board[1]} -eq ${board[9]} ]] && [[ ${board[1]} == $playerSymbol2 ]]
 	then
 		flag3=0
-	elif [[ ${board[3]} -eq ${board[5]} ]] && [[ ${board[3]} -eq ${board[7]} ]] && [[ ${board[3]} == $willPlay2 ]]
+	elif [[ ${board[3]} -eq ${board[5]} ]] && [[ ${board[3]} -eq ${board[7]} ]] && [[ ${board[3]} == $playerSymbol2 ]]
 	then
 		flag3=0
 	else
@@ -221,15 +221,15 @@ if [ $blockOpponent -eq 0 ]
 then
 	for((i=1;i<=9;))
 	do
-		if [[ ${board[$i]} -eq ${board[$(($i+1))]} && ${board[$i]}==$willPlay1 ]]
+		if [[ ${board[$i]} -eq ${board[$(($i+1))]} && ${board[$i]}==$playerSymbol1 ]]
 		then
-			board[$(($i+2))]=$willPlay2
-		elif [[ ${board[$i]} -eq ${board[$(($i+2))]} && ${board[$i]}==$willPlay1 ]]
+			board[$(($i+2))]=$playerSymbol2
+		elif [[ ${board[$i]} -eq ${board[$(($i+2))]} && ${board[$i]}==$playerSymbol1 ]]
 		then
-			board[$(($i+1))]=$willPlay2
-		elif [[ ${board[$(($i+1))]} -eq ${board[$(($i+2))]} && ${board[$(($i+1))]}==$willPlay1 ]]
+			board[$(($i+1))]=$playerSymbol2
+		elif [[ ${board[$(($i+1))]} -eq ${board[$(($i+2))]} && ${board[$(($i+1))]}==$playerSymbol1 ]]
 		then
-			board[$i]=$willPlay2
+			board[$i]=$playerSymbol2
 		fi
 
 		i=$(($i+3))
@@ -245,15 +245,15 @@ if [ $blockOpponent -eq 0 ]
 then
 	for((i=1;i<=3;i++))
 	do
-		if [[ ${board[$i]} -eq ${board[$(($i+3))]} && ${board[$i]}==$willPlay1 ]] 
+		if [[ ${board[$i]} -eq ${board[$(($i+3))]} && ${board[$i]}==$playerSymbol1 ]] 
 		then
-			board[$(($i+6))]=$willPlay2
-		elif [[ ${board[$i]} -eq ${board[$(($i+6))]} && ${board[$i]}==$willPlay1 ]]
+			board[$(($i+6))]=$playerSymbol2
+		elif [[ ${board[$i]} -eq ${board[$(($i+6))]} && ${board[$i]}==$playerSymbol1 ]]
 		then
-			board[$(($i+3))]=$willPlay2
-		elif [[ ${board[$(($i+3))]} -eq ${board[$(($i+6))]} && ${board[$(($i+1))]}==$willPlay1 ]]
+			board[$(($i+3))]=$playerSymbol2
+		elif [[ ${board[$(($i+3))]} -eq ${board[$(($i+6))]} && ${board[$(($i+1))]}==$playerSymbol1 ]]
 		then
-			board[$i]=$willPlay2
+			board[$i]=$playerSymbol2
 		fi
 	done
 	blockOpponent=1
@@ -265,18 +265,18 @@ function checkOpponentDiagonals()
 {
 	if [ $blockOpponent -eq 0 ]
 	then
-		if [[ ${board[1]} -eq ${board[5]} && ${board[1]}==$willPlay1 ]]
+		if [[ ${board[1]} -eq ${board[5]} && ${board[1]}==$playerSymbol1 ]]
 		then
-			board[9]=$willPlay2
-		elif [[ ${board[9]} -eq ${board[5]} && ${board[5]}==$willPlay1 ]]
+			board[9]=$playerSymbol2
+		elif [[ ${board[9]} -eq ${board[5]} && ${board[5]}==$playerSymbol1 ]]
 		then
-			board[1]=$willPlay2
-		elif [[ ${board[5]} -eq ${board[7]} && ${board[5]}==$willPlay1 ]]
+			board[1]=$playerSymbol2
+		elif [[ ${board[5]} -eq ${board[7]} && ${board[5]}==$playerSymbol1 ]]
 		then
-			board[3]=$willPlay2
-		elif [[ ${board[3]} -eq ${board[7]} && ${board[3]}==$willPlay1 ]]
+			board[3]=$playerSymbol2
+		elif [[ ${board[3]} -eq ${board[7]} && ${board[3]}==$playerSymbol1 ]]
 		then
-			board[5]=$willPlay2
+			board[5]=$playerSymbol2
 		fi
 		blockOpponent=1
 	fi
